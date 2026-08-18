@@ -17,7 +17,7 @@ export function FarmerMascot({ height = 180, width = 260 }: FarmerMascotProps) {
   return (
     <View style={[styles.container, { height }]}>
       <Image
-        source={require('@/assets/images/farmer_illustration.png')}
+        source={require('@/assets/images/farmericon.png')}
         style={{ width, height }}
         contentFit="contain"
         priority="high"

@@ -18,21 +18,21 @@ import { Spacing, MaxContentWidth } from '@/constants/theme';
 
 // --- Custom SVGs ---
 
-const EditIcon = ({ color = '#2E8B57' }: { color?: string }) => (
+const EditIcon = ({ color = '#1F5A2A' }: { color?: string }) => (
   <Svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
     <Path d="M12 20h9" />
     <Path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
   </Svg>
 );
 
-const LeafIcon = ({ color = '#1B3C18' }: { color?: string }) => (
+const LeafIcon = ({ color = '#1F5A2A' }: { color?: string }) => (
   <Svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
     <Path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 3.5 1 9.8a7 7 0 0 1-9 8.2z" />
     <Path d="M9.8 6.1C12 8 15 11 19 12" />
   </Svg>
 );
 
-const PulseWave = ({ color = '#1B3C18' }: { color?: string }) => (
+const PulseWave = ({ color = '#1F5A2A' }: { color?: string }) => (
   <View style={styles.pulseContainer}>
     <View style={[styles.pulseLine, { backgroundColor: color + '40' }]} />
     <Svg width={50} height={20} viewBox="0 0 50 20" style={styles.pulseSvg}>
@@ -137,11 +137,13 @@ export function OtpScreen({ phoneNumber, onVerifySuccess, onBackToLogin }: OtpSc
 
           {/* Branding Logo Section */}
           <View style={styles.logoContainer}>
-            <View style={styles.brandTitleRow}>
-              <Text style={styles.brandAgro}>एग्रो</Text>
-              <Text style={styles.brandPulse}>Pulse</Text>
-            </View>
-            <PulseWave color="#2E8B57" />
+            <Image
+              source={require('@/assets/images/title.png')}
+              style={styles.brandTitleImage}
+              contentFit="contain"
+              priority="high"
+            />
+            <PulseWave color="#1F5A2A" />
           </View>
 
           {/* Title & Subtitle */}
@@ -167,7 +169,7 @@ export function OtpScreen({ phoneNumber, onVerifySuccess, onBackToLogin }: OtpSc
           {/* Farmer Mascot Image */}
           <View style={styles.mascotContainer}>
             <Image
-              source={require('@/assets/images/farmer_illustration.png')}
+              source={require('@/assets/images/farmericon.png')}
               style={styles.mascotImage}
               contentFit="contain"
               priority="high"
@@ -323,6 +325,11 @@ const styles = StyleSheet.create({
   },
   editButton: {
     padding: 4,
+  },
+  brandTitleImage: {
+    width: 170,
+    height: 46,
+    marginBottom: 4,
   },
   mascotContainer: {
     width: '100%',

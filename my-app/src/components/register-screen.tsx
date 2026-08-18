@@ -53,7 +53,7 @@ const EyeOffIcon = ({ color = '#60646C' }: { color?: string }) => (
   </Svg>
 );
 
-const PulseWave = ({ color = '#1B3C18' }: { color?: string }) => (
+const PulseWave = ({ color = '#1F5A2A' }: { color?: string }) => (
   <View style={styles.pulseContainer}>
     <View style={[styles.pulseLine, { backgroundColor: color + '40' }]} />
     <Svg width={50} height={20} viewBox="0 0 50 20" style={styles.pulseSvg}>
@@ -147,10 +147,12 @@ export function RegisterScreen({ onRegisterSuccess, onBackToLogin }: RegisterScr
 
           {/* Branding Logo Section */}
           <View style={styles.logoContainer}>
-            <View style={styles.brandTitleRow}>
-              <Text style={styles.brandAgro}>एग्रो</Text>
-              <Text style={styles.brandPulse}>Pulse</Text>
-            </View>
+            <Image
+              source={require('@/assets/images/title.png')}
+              style={styles.brandTitleImage}
+              contentFit="contain"
+              priority="high"
+            />
             <PulseWave color="#2E8B57" />
           </View>
 
@@ -165,7 +167,7 @@ export function RegisterScreen({ onRegisterSuccess, onBackToLogin }: RegisterScr
           {/* Farmer Mascot Image */}
           <View style={styles.mascotContainer}>
             <Image
-              source={require('@/assets/images/farmer_illustration.png')}
+              source={require('@/assets/images/farmericon.png')}
               style={styles.mascotImage}
               contentFit="contain"
               priority="high"
@@ -434,6 +436,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     textAlign: 'center',
+  },
+  brandTitleImage: {
+    width: 170,
+    height: 46,
+    marginBottom: 4,
   },
   mascotContainer: {
     width: '100%',

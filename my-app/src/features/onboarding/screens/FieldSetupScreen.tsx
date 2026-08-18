@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   Platform,
 } from 'react-native';
+import { Image } from 'expo-image';
 import Svg, { Circle, Path, G } from 'react-native-svg';
 
 interface FieldSetupScreenProps {
@@ -15,10 +16,12 @@ interface FieldSetupScreenProps {
 }
 
 const AgroPulseLogo = () => (
-  <View style={styles.logoWrap}>
-    <Text style={styles.logoText}>एग्रो</Text>
-    <Text style={styles.logoAccent}>Pulse</Text>
-  </View>
+  <Image
+    source={require('@/assets/images/title.png')}
+    style={styles.logoImage}
+    contentFit="contain"
+    priority="high"
+  />
 );
 
 const HelpIcon = () => (
@@ -157,6 +160,10 @@ const styles = StyleSheet.create({
   brandRow: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  logoImage: {
+    width: 150,
+    height: 38,
   },
   logoWrap: {
     flexDirection: 'row',

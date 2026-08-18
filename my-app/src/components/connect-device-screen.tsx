@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   Alert,
 } from 'react-native';
+import { Image } from 'expo-image';
 import Svg, { Path, Circle, Rect, Line, Ellipse } from 'react-native-svg';
 import { useTheme } from '@/hooks/use-theme';
 import { Spacing, MaxContentWidth } from '@/constants/theme';
@@ -153,10 +154,12 @@ export function ConnectDeviceScreen({ onConnected, onSkip }: ConnectDeviceScreen
     <SafeAreaView style={[styles.safeArea, { backgroundColor: '#0D1210' }]}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.topBar}>
-          <View style={styles.logoRow}>
-            <Text style={styles.brandAgro}>एग्रो</Text>
-            <Text style={styles.brandPulse}>Pulse</Text>
-          </View>
+          <Image
+            source={require('@/assets/images/title.png')}
+            style={styles.brandTitleImage}
+            contentFit="contain"
+            priority="high"
+          />
 
           <TouchableOpacity
             style={styles.helpButton}
@@ -260,6 +263,10 @@ const styles = StyleSheet.create({
   logoRow: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  brandTitleImage: {
+    width: 150,
+    height: 38,
   },
   brandAgro: {
     fontSize: 32,

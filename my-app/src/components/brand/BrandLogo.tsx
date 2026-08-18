@@ -5,7 +5,8 @@
  */
 
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { Image } from 'expo-image';
 import Svg, { Path } from 'react-native-svg';
 
 interface BrandLogoProps {
@@ -13,9 +14,9 @@ interface BrandLogoProps {
 }
 
 const SIZE_MAP = {
-  sm: { agro: 24, pulse: 24, wave: { width: 40, height: 16 } },
-  md: { agro: 28, pulse: 28, wave: { width: 50, height: 20 } },
-  lg: { agro: 36, pulse: 36, wave: { width: 50, height: 20 } },
+  sm: { width: 120, height: 32, wave: { width: 40, height: 16 } },
+  md: { width: 145, height: 38, wave: { width: 50, height: 20 } },
+  lg: { width: 170, height: 46, wave: { width: 50, height: 20 } },
 };
 
 export function BrandLogo({ size = 'lg' }: BrandLogoProps) {
@@ -23,10 +24,12 @@ export function BrandLogo({ size = 'lg' }: BrandLogoProps) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.titleRow}>
-        <Text style={[styles.brandAgro, { fontSize: s.agro }]}>एग्रो</Text>
-        <Text style={[styles.brandPulse, { fontSize: s.pulse }]}>Pulse</Text>
-      </View>
+      <Image
+        source={require('@/assets/images/title.png')}
+        style={{ width: s.width, height: s.height }}
+        contentFit="contain"
+        priority="high"
+      />
       <PulseWave waveWidth={s.wave.width} waveHeight={s.wave.height} />
     </View>
   );
