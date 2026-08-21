@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,8 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
+import { AnalysisScreen } from '@/components/analysis-screen';
+import { RecommendationScreen } from '@/components/recommendation-screen';
 
 const metricCards = [
   { label: 'Soil Moisture', value: '26.6%', unit: 'Moisture', icon: '💧', tint: '#DDF5E5' },
@@ -26,6 +28,8 @@ const navItems = [
 ];
 
 export default function AppTabs() {
+  const [activeTab, setActiveTab] = useState('Home');
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -48,7 +52,7 @@ export default function AppTabs() {
           </View>
         </View>
 
-        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        {activeTab === 'Home' ? <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           <View style={styles.fieldHeader}>
             <Text style={styles.fieldTitle}>Field 1</Text>
             <TouchableOpacity style={styles.switchButton} activeOpacity={0.8}>
@@ -97,13 +101,13 @@ export default function AppTabs() {
               </View>
             ))}
           </View>
-        </ScrollView>
+        </ScrollView> : activeTab === 'Analysis' ? <AnalysisScreen /> : <RecommendationScreen />}
 
         <View style={styles.bottomNav}>
           {navItems.map((item) => (
-            <TouchableOpacity key={item.label} style={styles.navItem} activeOpacity={0.8}>
-              <Text style={[styles.navIcon, item.active && styles.navIconActive]}>{item.icon}</Text>
-              <Text style={[styles.navText, item.active && styles.navTextActive]}>{item.label}</Text>
+            <TouchableOpacity key={item.label} style={styles.navItem} activeOpacity={0.8} onPress={() => setActiveTab(item.label)}>
+              <Text style={[styles.navIcon, activeTab === item.label && styles.navIconActive]}>{item.icon}</Text>
+              <Text style={[styles.navText, activeTab === item.label && styles.navTextActive]}>{item.label}</Text>
             </TouchableOpacity>
           ))}
         </View>

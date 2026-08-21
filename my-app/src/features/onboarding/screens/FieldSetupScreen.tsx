@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,6 @@ import {
   Platform,
 } from 'react-native';
 import { Image } from 'expo-image';
-import Svg, { Circle, Path, G } from 'react-native-svg';
 
 interface FieldSetupScreenProps {
   onContinue: () => void;
@@ -43,27 +42,11 @@ const StepIndicator = () => (
   </View>
 );
 
-const FieldIcon = () => (
-  <Svg width={22} height={22} viewBox="0 0 32 32" aria-label="field icon">
-    <G stroke="#2E8B57" strokeWidth={1.5} fill="none" strokeLinecap="round" strokeLinejoin="round">
-      <Path d="M6 20c3-6 7-9 12-11 1.5-0.8 3.1-1.3 4.9-1.6-1.4 4.2-3.7 8.3-7.2 12-2.1 2.2-5.1 3.6-9.7 4.6z" />
-      <Path d="M8 24c2.8-2.7 6.2-4.7 10.1-6.1" />
-      <Path d="M18 18c1.8 1.2 3.5 2.5 5.1 4" />
-      <Circle cx="12" cy="12" r="1.2" fill="#2E8B57" stroke="none" />
-    </G>
-  </Svg>
-);
-
-const LocationIcon = () => (
-  <Svg width={22} height={22} viewBox="0 0 32 32" aria-label="location icon">
-    <G fill="none" stroke="#2E8B57" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-      <Path d="M16 27s8-6.5 8-13.5A8 8 0 0 0 8 13.5C8 20.5 16 27 16 27z" />
-      <Circle cx="16" cy="13.5" r="2.8" fill="#2E8B57" stroke="none" />
-    </G>
-  </Svg>
-);
-
 export function FieldSetupScreen({ onContinue }: FieldSetupScreenProps) {
+  const [fieldSize, setFieldSize] = useState('');
+  const [distance, setDistance] = useState('');
+  const [pointCount, setPointCount] = useState('');
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -80,7 +63,9 @@ export function FieldSetupScreen({ onContinue }: FieldSetupScreenProps) {
 
         <View style={styles.sectionCard}>
           <View style={styles.labelRow}>
-            <FieldIcon />
+            <View style={styles.iconFrame}>
+              <Image source={require('@/assets/images/feild&locationicon.png')} style={styles.fieldIconImage} contentFit="fill" />
+            </View>
             <Text style={styles.fieldLabel}>Enter the size of the field</Text>
           </View>
 
@@ -90,6 +75,8 @@ export function FieldSetupScreen({ onContinue }: FieldSetupScreenProps) {
               placeholder="Enter the size"
               placeholderTextColor="#7C8C85"
               keyboardType="numeric"
+              value={fieldSize}
+              onChangeText={setFieldSize}
             />
             <Text style={styles.unitText}>acres</Text>
           </View>
@@ -97,7 +84,9 @@ export function FieldSetupScreen({ onContinue }: FieldSetupScreenProps) {
 
         <View style={styles.sectionCard}>
           <View style={styles.labelRow}>
-            <LocationIcon />
+            <View style={styles.iconFrame}>
+              <Image source={require('@/assets/images/feild&locationicon.png')} style={styles.locationIconImage} contentFit="fill" />
+            </View>
             <Text style={styles.fieldLabel}>Points where to place the device</Text>
           </View>
 
@@ -107,7 +96,8 @@ export function FieldSetupScreen({ onContinue }: FieldSetupScreenProps) {
               style={styles.input}
               placeholder=""
               keyboardType="numeric"
-              value=""
+              value={distance}
+              onChangeText={setDistance}
             />
             <Text style={styles.unitText}>meters</Text>
           </View>
@@ -118,7 +108,8 @@ export function FieldSetupScreen({ onContinue }: FieldSetupScreenProps) {
               style={styles.input}
               placeholder=""
               keyboardType="numeric"
-              value=""
+              value={pointCount}
+              onChangeText={setPointCount}
             />
           </View>
         </View>
@@ -141,29 +132,29 @@ export function FieldSetupScreen({ onContinue }: FieldSetupScreenProps) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#eef2ee',
+    backgroundColor: '#FFFFFF',
   },
   container: {
     flex: 1,
     width: '100%',
-    maxWidth: 420,
+    maxWidth: 330,
     alignSelf: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 18,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
   },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: 3,
   },
   brandRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   logoImage: {
-    width: 150,
-    height: 38,
+    width: 108,
+    height: 30,
   },
   logoWrap: {
     flexDirection: 'row',
@@ -183,48 +174,48 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   helpButton: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    backgroundColor: '#E6F2EA',
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: '#315E4A',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#C9DCCF',
+    borderColor: '#315E4A',
   },
   helpText: {
-    color: '#1A3126',
-    fontSize: 18,
+    color: '#FFFFFF',
+    fontSize: 15,
     fontWeight: '700',
   },
   title: {
-    fontSize: 28,
+    fontSize: 25,
     fontWeight: '800',
-    color: '#183329',
-    marginTop: 6,
-    marginBottom: 18,
+    color: '#194C2D',
+    marginTop: 1,
+    marginBottom: 16,
   },
   stepRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 18,
+    marginBottom: 12,
   },
   stepBubble: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: '#D9E6DD',
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: '#DCE5DF',
     alignItems: 'center',
     justifyContent: 'center',
   },
   stepBubbleActive: {
-    backgroundColor: '#2E8B57',
+    backgroundColor: '#194C2D',
   },
   stepLabel: {
     color: '#4D625B',
     fontWeight: '700',
-    fontSize: 13,
+    fontSize: 12,
   },
   stepLabelActive: {
     color: '#fff',
@@ -232,27 +223,42 @@ const styles = StyleSheet.create({
   stepLine: {
     width: 36,
     height: 2,
-    backgroundColor: '#D0DDD4',
-    marginHorizontal: 6,
+    backgroundColor: '#BBD0C2',
+    marginHorizontal: 3,
   },
   sectionCard: {
-    backgroundColor: '#F6FAF7',
-    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#CFE3D5',
-    padding: 14,
-    marginBottom: 18,
+    borderColor: '#222222',
+    padding: 12,
+    marginBottom: 14,
   },
   labelRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 8,
+  },
+  iconFrame: {
+    width: 42,
+    height: 42,
+    overflow: 'hidden',
+    justifyContent: 'center',
+  },
+  fieldIconImage: {
+    width: 84,
+    height: 42,
+  },
+  locationIconImage: {
+    width: 84,
+    height: 42,
+    transform: [{ translateX: -42 }],
   },
   fieldLabel: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '700',
-    color: '#183329',
-    marginLeft: 8,
+    color: '#111111',
+    marginLeft: 7,
     flex: 1,
   },
   inputContainer: {
@@ -262,40 +268,40 @@ const styles = StyleSheet.create({
     borderColor: '#BFD5C8',
     borderRadius: 12,
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: 12,
-    height: 44,
-    marginBottom: 10,
+    paddingHorizontal: 10,
+    height: 40,
+    marginBottom: 8,
   },
   input: {
     flex: 1,
     color: '#183329',
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: '500',
     paddingVertical: 0,
   },
   unitText: {
     color: '#5A6F66',
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600',
-    marginLeft: 10,
+    marginLeft: 8,
   },
   helperText: {
     color: '#4C5E57',
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '500',
-    marginBottom: 8,
+    marginBottom: 7,
   },
   checkboxRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginBottom: 18,
-    gap: 8,
+    marginBottom: 12,
+    gap: 7,
   },
   checkBox: {
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    backgroundColor: '#2E8B57',
+    width: 19,
+    height: 19,
+    borderRadius: 10,
+    backgroundColor: '#13D637',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 2,
@@ -308,14 +314,14 @@ const styles = StyleSheet.create({
   checkboxText: {
     flex: 1,
     color: '#2F4A42',
-    fontSize: 13,
-    lineHeight: 18,
-    fontWeight: '500',
+    fontSize: 11,
+    lineHeight: 14,
+    fontWeight: '400',
   },
   continueButton: {
-    backgroundColor: '#2E8B57',
+    backgroundColor: '#194C2D',
     borderRadius: 16,
-    paddingVertical: 16,
+    paddingVertical: 11,
     alignItems: 'center',
     justifyContent: 'center',
     ...Platform.select({

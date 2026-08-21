@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
+import { Image } from 'expo-image';
+import { AnalysisScreen } from '@/components/analysis-screen';
+import { RecommendationScreen } from '@/components/recommendation-screen';
 
 const metricCards = [
-  { label: 'Soil Moisture', value: '26.6%', unit: 'Moisture', icon: '💧', tint: '#DDF5E5' },
-  { label: 'Temperature', value: '27.5°C', unit: 'Air Temp', icon: '🌡️', tint: '#E9F2FF' },
-  { label: 'Electrical Conductivity', value: '21.8', unit: 'dS/m', icon: '⚡', tint: '#E9F9F0' },
-  { label: 'pH', value: '6.45', unit: 'pH level', icon: '🧪', tint: '#F1F7ED' },
-  { label: 'Nitrogen (N)', value: '48.2', unit: 'mg/kg', icon: 'N', tint: '#E9F7EF' },
-  { label: 'Phosphorus (P)', value: '38.2', unit: 'mg/kg', icon: 'P', tint: '#EEF3FF' },
-  { label: 'Potassium (K)', value: '41.4', unit: 'mg/kg', icon: 'K', tint: '#FFF5E3' },
+  { label: 'Soil Moisture', value: '26.6%', unit: 'Volumetric', iconIndex: 0, tint: '#FFFFFF' },
+  { label: 'Temperature', value: '27.5°C', unit: 'Air Temperature', iconIndex: 1, tint: '#FFFFFF' },
+  { label: 'Electrical Conductivity', value: '1.28', unit: 'EC (dS/m)', iconIndex: 2, tint: '#FFFFFF' },
+  { label: 'pH', value: '6.45', unit: 'pH Level', iconIndex: 3, tint: '#FFFFFF' },
+  { label: 'Nitrogen (N)', value: '48.2', unit: 'mg/kg', iconIndex: 4, tint: '#FFFFFF' },
+  { label: 'Phosphorus (P)', value: '38.2', unit: 'mg/kg', iconIndex: 5, tint: '#FFFFFF' },
+  { label: 'Potassium (K)', value: '41.4', unit: 'mg/kg', iconIndex: 6, tint: '#FFFFFF' },
 ];
 
 const navItems = [
@@ -19,6 +22,8 @@ const navItems = [
 ];
 
 export default function AppTabs() {
+  const [activeTab, setActiveTab] = useState('Home');
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -41,12 +46,17 @@ export default function AppTabs() {
           </View>
         </View>
 
-        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        {activeTab === 'Home' ? <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           <View style={styles.fieldHeader}>
             <Text style={styles.fieldTitle}>Field 1</Text>
             <TouchableOpacity style={styles.switchButton} activeOpacity={0.8}>
               <Text style={styles.switchText}>North Field</Text>
             </TouchableOpacity>
+          </View>
+
+          <View style={styles.dateRow}>
+            <Text style={styles.dateText}>▣ 16/07/2026</Text>
+            <Text style={styles.updatedText}>⌁ Last Updated: Just now</Text>
           </View>
 
           <View style={styles.mapCard}>
@@ -73,11 +83,18 @@ export default function AppTabs() {
           </View>
 
           <View style={styles.cardsGrid}>
-            {metricCards.map((card) => (
-              <View key={card.label} style={[styles.metricCard, { backgroundColor: card.tint }]}>
+            {metricCards.map((card, index) => (
+              <View
+                key={card.label}
+                style={[styles.metricCard, index < 4 ? styles.metricCardQuarter : styles.metricCardThird, { backgroundColor: card.tint }]}
+              >
                 <View style={styles.cardTopRow}>
                   <View style={styles.iconWrap}>
-                    <Text style={styles.iconText}>{card.icon}</Text>
+                    <Image
+                      source={require('@/assets/images/Home screen icon.png')}
+                      style={[styles.spriteImage, { transform: [{ translateX: [-11, -80, -149, -218, -12, -68, -123][card.iconIndex] }, { translateY: card.iconIndex < 4 ? -34 : -116 }] }]}
+                      contentFit="fill"
+                    />
                   </View>
                   <View style={styles.cardBadge}>
                     <Text style={styles.badgeText}>i</Text>
@@ -90,13 +107,13 @@ export default function AppTabs() {
               </View>
             ))}
           </View>
-        </ScrollView>
+        </ScrollView> : activeTab === 'Analysis' ? <AnalysisScreen /> : <RecommendationScreen />}
 
         <View style={styles.bottomNav}>
           {navItems.map((item) => (
-            <TouchableOpacity key={item.label} style={styles.navItem} activeOpacity={0.8}>
-              <Text style={[styles.navIcon, item.active && styles.navIconActive]}>{item.icon}</Text>
-              <Text style={[styles.navText, item.active && styles.navTextActive]}>{item.label}</Text>
+            <TouchableOpacity key={item.label} style={styles.navItem} activeOpacity={0.8} onPress={() => setActiveTab(item.label)}>
+              <Text style={[styles.navIcon, activeTab === item.label && styles.navIconActive]}>{item.icon}</Text>
+              <Text style={[styles.navText, activeTab === item.label && styles.navTextActive]}>{item.label}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -188,6 +205,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 12,
+  },
+  dateRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  dateText: {
+    color: '#738078',
+    fontSize: 10,
+  },
+  updatedText: {
+    color: '#68766D',
+    backgroundColor: '#F0F2EF',
+    borderRadius: 12,
+    paddingHorizontal: 9,
+    paddingVertical: 5,
+    fontSize: 9,
   },
   fieldTitle: {
     fontSize: 22,
@@ -285,12 +320,17 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   metricCard: {
-    width: '31%',
-    minHeight: 120,
-    borderRadius: 18,
+    minHeight: 96,
+    borderRadius: 10,
     padding: 10,
     borderWidth: 1,
     borderColor: '#dfe9df',
+  },
+  metricCardQuarter: {
+    width: '23.5%',
+  },
+  metricCardThird: {
+    width: '31.5%',
   },
   cardTopRow: {
     flexDirection: 'row',
@@ -299,12 +339,19 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   iconWrap: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: 'rgba(255,255,255,0.38)',
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#EFF7ED',
     justifyContent: 'center',
     alignItems: 'center',
+    overflow: 'hidden',
+  },
+  spriteImage: {
+    position: 'absolute',
+    width: 320,
+    height: 178,
+    maxWidth: 'none',
   },
   iconText: {
     fontSize: 14,
@@ -320,7 +367,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   badgeText: {
-    fontSize: 10,
+    fontSize: 9,
     color: '#1d2a22',
     fontWeight: '700',
   },
@@ -332,13 +379,13 @@ const styles = StyleSheet.create({
   },
   cardValue: {
     color: '#183329',
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: '800',
     marginBottom: 4,
   },
   cardUnit: {
     color: '#587466',
-    fontSize: 9,
+    fontSize: 8,
     fontWeight: '600',
   },
   bottomNav: {

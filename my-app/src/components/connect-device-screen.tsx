@@ -10,7 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import { Image } from 'expo-image';
-import Svg, { Path, Circle, Rect, Line, Ellipse } from 'react-native-svg';
+import Svg, { Path, Line, Circle } from 'react-native-svg';
 import { useTheme } from '@/hooks/use-theme';
 import { Spacing, MaxContentWidth } from '@/constants/theme';
 
@@ -58,58 +58,6 @@ const CheckIcon = ({ color = '#2E8B57' }: { color?: string }) => (
   </Svg>
 );
 
-const DeviceIllustration = () => (
-  <Svg width={200} height={160} viewBox="0 0 200 160">
-    <Ellipse cx="98" cy="130" rx="32" ry="9" fill="#2E8B5715" />
-    <Rect x="90" y="28" width="18" height="96" rx="9" fill="#2F3136" />
-    <Rect x="84" y="18" width="30" height="18" rx="7" fill="#183F26" />
-    <Rect x="95" y="8" width="8" height="14" rx="4" fill="#2E8B57" />
-    <Circle cx="99" cy="72" r="5" fill="#34A853" />
-
-    <Circle cx="146" cy="82" r="16" fill="none" stroke="#2E8B57" strokeWidth="2" strokeDasharray="4,3" />
-    <Circle cx="146" cy="82" r="28" fill="none" stroke="#2E8B57" strokeWidth="1.5" strokeDasharray="4,4" opacity="0.5" />
-    <Circle cx="146" cy="82" r="12" fill="#2E8B57" />
-    <Path
-      d="M143 78 l6 4 l-6 4 M143 78 l6 4 l-6 4 M146 77 l4 0"
-      fill="none"
-      stroke="white"
-      strokeWidth="1.7"
-      strokeLinecap="round"
-    />
-    <Line x1="108" y1="82" x2="130" y2="82" stroke="#2E8B57" strokeWidth="1.6" strokeDasharray="4,3" />
-  </Svg>
-);
-
-const PhoneBluetoothIcon = () => (
-  <Svg width={50} height={50} viewBox="0 0 48 48">
-    <Rect x="12" y="5" width="18" height="30" rx="3" fill="#EAF9EE" stroke="#2E8B57" strokeWidth="1.5" />
-    <Circle cx="21" cy="31" r="2" fill="#2E8B57" />
-    <Circle cx="32" cy="17" r="8" fill="#2E8B57" />
-    <Path d="M29 13 l4 3.5 l-4 3.5 M29 13 l4 3.5 l-4 3.5" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-    <Path d="M32 11 l2 2.5 l-2 2.5 l2 2.5 l-2 2.5" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-  </Svg>
-);
-
-const StickPowerIcon = () => (
-  <Svg width={50} height={50} viewBox="0 0 48 48">
-    <Rect x="18" y="10" width="12" height="30" rx="6" fill="#EAF9EE" stroke="#2E8B57" strokeWidth="1.5" />
-    <Rect x="21" y="4" width="6" height="9" rx="3" fill="#2E8B57" />
-    <Circle cx="24" cy="24" r="3.5" fill="#34A853" />
-    <Circle cx="24" cy="24" r="7" fill="none" stroke="#34A853" strokeWidth="1" opacity="0.5" />
-  </Svg>
-);
-
-const PhoneListIcon = () => (
-  <Svg width={50} height={50} viewBox="0 0 48 48">
-    <Rect x="8" y="6" width="22" height="36" rx="3" fill="#EAF9EE" stroke="#2E8B57" strokeWidth="1.5" />
-    <Rect x="12" y="14" width="14" height="3" rx="1.5" fill="#2E8B57" opacity="0.5" />
-    <Rect x="12" y="20" width="14" height="3" rx="1.5" fill="#2E8B57" />
-    <Rect x="12" y="26" width="14" height="3" rx="1.5" fill="#2E8B57" opacity="0.5" />
-    <Circle cx="36" cy="30" r="8" fill="#2E8B57" opacity="0.9" />
-    <Path d="M33 30 l2 2 l4-4" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-  </Svg>
-);
-
 interface ConnectDeviceScreenProps {
   onConnected: () => void;
   onSkip: () => void;
@@ -120,19 +68,19 @@ const STEPS = [
     number: 1,
     title: 'Turn on Bluetooth',
     description: 'Enable Bluetooth on your phone',
-    Icon: PhoneBluetoothIcon,
+    image: require('@/assets/images/phoneIcon.png'),
   },
   {
     number: 2,
     title: 'Power on the stick',
     description: 'Press and hold the power button until the LED starts blinking',
-    Icon: StickPowerIcon,
+    image: require('@/assets/images/StickIcon.png'),
   },
   {
     number: 3,
     title: 'Find and Connect',
     description: 'Tap the connect button below and select your AgroPulse Stick',
-    Icon: PhoneListIcon,
+    image: require('@/assets/images/all3icon.png'),
   },
 ];
 
@@ -151,7 +99,7 @@ export function ConnectDeviceScreen({ onConnected, onSkip }: ConnectDeviceScreen
   };
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: '#0D1210' }]}>
+    <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.topBar}>
           <Image
@@ -186,7 +134,7 @@ export function ConnectDeviceScreen({ onConnected, onSkip }: ConnectDeviceScreen
         </View>
 
         <View style={styles.illustrationContainer}>
-          <DeviceIllustration />
+          <Image source={require('@/assets/images/stick.png')} style={styles.stickImage} contentFit="contain" />
         </View>
 
         <View style={styles.stepsHeaderRow}>
@@ -208,7 +156,7 @@ export function ConnectDeviceScreen({ onConnected, onSkip }: ConnectDeviceScreen
               </View>
 
               <View style={styles.stepIllustration}>
-                <step.Icon />
+                <Image source={step.image} style={[styles.stepImage, step.number === 3 && styles.allStepsImage]} contentFit="contain" />
               </View>
             </View>
           ))}
@@ -242,10 +190,11 @@ export function ConnectDeviceScreen({ onConnected, onSkip }: ConnectDeviceScreen
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    backgroundColor: '#FFFFFF',
   },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: Spacing.four,
+    paddingBottom: 12,
     alignItems: 'center',
     width: '100%',
     maxWidth: MaxContentWidth,
@@ -256,17 +205,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: Spacing.three,
-    paddingTop: Spacing.three,
-    paddingBottom: Spacing.one,
+    paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingBottom: 0,
   },
   logoRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   brandTitleImage: {
-    width: 150,
-    height: 38,
+    width: 116,
+    height: 31,
   },
   brandAgro: {
     fontSize: 32,
@@ -281,120 +230,135 @@ const styles = StyleSheet.create({
     marginLeft: 2,
   },
   helpButton: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: '#1F2B27',
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: '#315E4A',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#325B49',
+    borderColor: '#315E4A',
   },
   pulseContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     width: '70%',
-    marginVertical: Spacing.one,
+    height: 1,
+    marginTop: 5,
+    marginBottom: 10,
   },
   pulseLine: {
     flex: 1,
-    height: 2,
+    height: 1,
   },
   titleContainer: {
     width: '100%',
     alignItems: 'center',
     paddingHorizontal: Spacing.three,
-    marginTop: Spacing.one,
+    marginTop: 0,
   },
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: Spacing.one,
+    marginBottom: 0,
     gap: 8,
   },
   titleText: {
-    fontSize: 30,
+    fontSize: 21,
     fontWeight: '800',
-    color: '#EAF7ED',
+    color: '#194C2D',
     textAlign: 'center',
   },
   subtitleText: {
-    fontSize: 15,
+    fontSize: 12,
     textAlign: 'center',
-    lineHeight: 22,
-    fontWeight: '600',
+    lineHeight: 16,
+    fontWeight: '500',
+    color: '#111111',
   },
   illustrationContainer: {
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: Spacing.one,
-    marginBottom: Spacing.one,
+    marginTop: 4,
+    marginBottom: 3,
+  },
+  stickImage: {
+    width: 190,
+    height: 118,
   },
   stepsHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 10,
-    marginBottom: Spacing.two,
+    gap: 8,
+    marginBottom: 7,
   },
   stepsHeaderText: {
-    fontSize: 18,
-    color: '#EAF7ED',
+    fontSize: 14,
+    color: '#194C2D',
     fontWeight: '800',
   },
   stepsContainer: {
     width: '94%',
-    gap: Spacing.two,
+    gap: 5,
   },
   stepCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#141C18',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#294A3F',
-    borderRadius: 18,
-    paddingVertical: Spacing.two,
-    paddingHorizontal: Spacing.two,
-    gap: 10,
+    borderColor: '#A6B5A8',
+    borderRadius: 9,
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+    gap: 7,
   },
   stepBadge: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: '#2E8B57',
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: '#E7F4E8',
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
   },
   stepBadgeText: {
-    color: '#FFFFFF',
-    fontSize: 13,
+    color: '#27824A',
+    fontSize: 11,
     fontWeight: '800',
   },
   stepTextContainer: {
     flex: 1,
   },
   stepTitle: {
-    fontSize: 15,
-    color: '#EAF7ED',
+    fontSize: 11,
+    color: '#111111',
     fontWeight: '700',
     marginBottom: 2,
   },
   stepDescription: {
-    fontSize: 12,
-    color: '#B9C9C1',
-    lineHeight: 17,
-    fontWeight: '500',
+    fontSize: 8,
+    color: '#777777',
+    lineHeight: 10,
+    fontWeight: '400',
   },
   stepIllustration: {
-    width: 52,
-    height: 52,
+    width: 38,
+    height: 38,
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
+  },
+  stepImage: {
+    width: 38,
+    height: 38,
+  },
+  allStepsImage: {
+    width: 114,
+    transform: [{ translateX: -38 }],
   },
   scanButton: {
     flexDirection: 'row',
@@ -402,9 +366,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 8,
     width: '94%',
-    backgroundColor: '#2E8B57',
-    borderRadius: 24,
-    paddingVertical: 15,
+    backgroundColor: '#194C2D',
+    borderRadius: 18,
+    paddingVertical: 10,
     marginTop: Spacing.three,
     marginBottom: Spacing.two,
     ...Platform.select({
@@ -428,7 +392,7 @@ const styles = StyleSheet.create({
   },
   scanButtonText: {
     color: '#FFFFFF',
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: '700',
   },
   footerNoteRow: {
@@ -445,11 +409,11 @@ const styles = StyleSheet.create({
     borderRadius: 11,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#12251D',
+    backgroundColor: '#E6F4E8',
   },
   footerNoteText: {
-    color: '#EAF7ED',
-    fontSize: 12,
+    color: '#333333',
+    fontSize: 8,
     textAlign: 'center',
     fontWeight: '600',
   },
@@ -459,8 +423,8 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.two,
   },
   skipLinkText: {
-    color: '#B7C9C1',
-    fontSize: 13,
+    color: '#777777',
+    fontSize: 10,
     textAlign: 'center',
     textDecorationLine: 'underline',
   },

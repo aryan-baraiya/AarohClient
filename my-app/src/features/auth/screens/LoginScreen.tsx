@@ -19,11 +19,18 @@ interface LoginScreenProps {
   onRegisterRequested: () => void;
 }
 
+type LoginMethod = 'phone' | 'email' | 'google' | null;
+
 export function LoginScreen({ onLogin, onPhoneLoginRequested, onRegisterRequested }: LoginScreenProps) {
   const theme = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [loginMethod, setLoginMethod] = useState<LoginMethod>(null);
+  const [methodEmail, setMethodEmail] = useState('');
+  const [methodPhone, setMethodPhone] = useState('');
+  const [methodPassword, setMethodPassword] = useState('');
+  const [showMethodPassword, setShowMethodPassword] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('EN');
   const [langModalVisible, setLangModalVisible] = useState(false);
 
@@ -48,14 +55,28 @@ export function LoginScreen({ onLogin, onPhoneLoginRequested, onRegisterRequeste
     }
   };
 
-  const handleSocialLogin = (type: string) => {
-    if (type === 'Phone') {
-      const trimmedInput = email.trim();
-      const phoneRegex = /^(\+?\d[\d\s-]{7,15})$/;
-      onPhoneLoginRequested(phoneRegex.test(trimmedInput) ? trimmedInput : '+91 1234567890');
-    } else {
-      onLogin();
+  const handleMethodLogin = () => {
+    const trimmedEmail = methodEmail.trim();
+    const trimmedPhone = methodPhone.trim();
+    const phoneRegex = /^(\+?\d[\d\s-]{7,15})$/;
+
+    if (loginMethod === 'phone') {
+      if (!phoneRegex.test(trimmedPhone)) {
+        Alert.alert('Invalid Phone Number', 'Please enter a valid phone number.');
+        return;
+      }
+      setLoginMethod(null);
+      onPhoneLoginRequested(trimmedPhone);
+      return;
     }
+
+    if (!trimmedEmail || (loginMethod === 'email' && !methodPassword.trim())) {
+      Alert.alert('Missing Fields', loginMethod === 'google' ? 'Please enter your Google email address.' : 'Please enter your email and password.');
+      return;
+    }
+
+    setLoginMethod(null);
+    onLogin();
   };
 
   return (
@@ -99,7 +120,7 @@ export function LoginScreen({ onLogin, onPhoneLoginRequested, onRegisterRequeste
               <LeafIcon color="#2E8B57" />
             </View>
 
-            <TouchableOpacity style={styles.googleButton} onPress={() => handleSocialLogin('Google')} activeOpacity={0.9}>
+            <TouchableOpacity style={styles.googleButton} onPress={() => setLoginMethod('google')} activeOpacity={0.9}>
               <View style={styles.googleIconWrapper}><GoogleIcon /></View>
               <Text style={styles.googleButtonText}>Continue With Google</Text>
             </TouchableOpacity>
@@ -111,11 +132,11 @@ export function LoginScreen({ onLogin, onPhoneLoginRequested, onRegisterRequeste
             </View>
 
             <View style={styles.alternativeLoginsRow}>
-              <TouchableOpacity style={styles.altLoginButton} onPress={() => handleSocialLogin('Phone')} activeOpacity={0.8}>
+              <TouchableOpacity style={styles.altLoginButton} onPress={() => setLoginMethod('phone')} activeOpacity={0.8}>
                 <PhoneIcon color="#1B3C18" />
                 <Text style={styles.altLoginButtonText}>Login with Phone</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.altLoginButton} onPress={() => handleSocialLogin('Email')} activeOpacity={0.8}>
+              <TouchableOpacity style={styles.altLoginButton} onPress={() => setLoginMethod('email')} activeOpacity={0.8}>
                 <EmailIcon color="#1B3C18" />
                 <Text style={styles.altLoginButtonText}>Login with Email</Text>
               </TouchableOpacity>
@@ -176,6 +197,39 @@ export function LoginScreen({ onLogin, onPhoneLoginRequested, onRegisterRequeste
           </View>
         </TouchableOpacity>
       </Modal>
+
+      <Modal visible={loginMethod !== null} transparent animationType="fade" onRequestClose={() => setLoginMethod(null)}>
+        <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setLoginMethod(null)}>
+          <TouchableOpacity style={[styles.loginMethodModal, { backgroundColor: theme.backgroundElement }]} activeOpacity={1}>
+            <Text style={[styles.modalTitle, { color: theme.text }]}>
+              {loginMethod === 'phone' ? 'Enter your phone number' : loginMethod === 'google' ? 'Continue with Google' : 'Login with email'}
+            </Text>
+            <Text style={[styles.modalDescription, { color: theme.textSecondary }]}>
+              {loginMethod === 'phone' ? 'We will send a verification code to this number.' : loginMethod === 'google' ? 'Enter the Google email address you want to use.' : 'Enter your email and password to continue.'}
+            </Text>
+
+            {loginMethod === 'phone' ? (
+              <TextInput style={styles.methodInput} placeholder="Phone number" placeholderTextColor="#B0B4BA" value={methodPhone} onChangeText={setMethodPhone} keyboardType="phone-pad" autoFocus />
+            ) : (
+              <>
+                <TextInput style={styles.methodInput} placeholder="Email address" placeholderTextColor="#B0B4BA" value={methodEmail} onChangeText={setMethodEmail} keyboardType="email-address" autoCapitalize="none" autoCorrect={false} autoFocus />
+                {loginMethod === 'email' && (
+                  <View style={styles.methodPasswordRow}>
+                    <TextInput style={[styles.methodInput, styles.methodPasswordInput]} placeholder="Password" placeholderTextColor="#B0B4BA" value={methodPassword} onChangeText={setMethodPassword} secureTextEntry={!showMethodPassword} autoCapitalize="none" />
+                    <TouchableOpacity style={styles.methodEyeButton} onPress={() => setShowMethodPassword(!showMethodPassword)}>
+                      {showMethodPassword ? <EyeOffIcon color="#60646C" /> : <EyeIcon color="#60646C" />}
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </>
+            )}
+
+            <TouchableOpacity style={styles.methodContinueButton} onPress={handleMethodLogin} activeOpacity={0.9}>
+              <Text style={styles.loginButtonText}>{loginMethod === 'phone' ? 'Send Code' : 'Continue'}</Text>
+            </TouchableOpacity>
+          </TouchableOpacity>
+        </TouchableOpacity>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -222,7 +276,14 @@ const styles = StyleSheet.create({
   registerLinkText: { color: '#2E8B57', fontSize: 14, fontWeight: '700' },
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', alignItems: 'center' },
   modalContent: { width: '80%', borderRadius: 20, padding: Spacing.three, alignItems: 'center' },
+  loginMethodModal: { width: '88%', borderRadius: 20, padding: Spacing.three },
   modalTitle: { fontSize: 18, fontWeight: '700', marginBottom: Spacing.three },
+  modalDescription: { fontSize: 14, lineHeight: 20, marginBottom: Spacing.two },
+  methodInput: { borderWidth: 1, borderColor: '#E0E1E6', borderRadius: 12, backgroundColor: '#FFFFFF', color: '#333333', paddingHorizontal: 14, height: 46, marginBottom: Spacing.two },
+  methodPasswordRow: { position: 'relative' },
+  methodPasswordInput: { paddingRight: 48, width: '100%' },
+  methodEyeButton: { position: 'absolute', right: 8, top: 5, padding: 6 },
+  methodContinueButton: { backgroundColor: '#1B3C18', borderRadius: 24, paddingVertical: 12, alignItems: 'center', justifyContent: 'center', marginTop: Spacing.one },
   modalItem: { width: '100%', paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.05)', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   modalItemText: { fontSize: 15 },
   modalItemActiveText: { fontWeight: '700', color: '#2E8B57' },
